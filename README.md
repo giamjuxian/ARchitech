@@ -33,8 +33,8 @@ For objects with red colour code (obstacles), users will be able to choose the t
 
 For objects with blue colour code (clues), users will be able to key in the clue for the maze which will be given to the gamer who touches these objects.
 
-### Delete button
-Users will be able to scroll through the list of objects they made and have the option to delete them
+### Delete/Edit button
+Users will be able to scroll through the list of objects they made and have the option to delete or edit them
 
 ## Plan
 1st week of June: Object Builder (Cube, Cuboid... with the controller)
