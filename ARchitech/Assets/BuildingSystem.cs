@@ -34,6 +34,7 @@ public class BuildingSystem : MonoBehaviour
     {
         bSys = GetComponent<BlockSystem>();
         blockSelectCounter = 0;
+        buildModeOn = true;
     }
 
     private void Update()
@@ -41,7 +42,6 @@ public class BuildingSystem : MonoBehaviour
         
         if (Input.GetKeyDown("e"))
         {
-            buildModeOn = !buildModeOn;
 
             // Remove Cursor when in build mode
             if (buildModeOn)
@@ -97,7 +97,7 @@ public class BuildingSystem : MonoBehaviour
         {
             currentTemplateBlock.transform.position = buildPos;
 
-            if (Input.GetMouseButton(0)) // Left mouse click
+            if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) // Left mouse click
             {
                 PlaceBlock();
             }
