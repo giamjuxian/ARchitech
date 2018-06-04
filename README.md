@@ -1,7 +1,10 @@
 # ARchitech
 ## AR Sandbox Game for Orbital 2018 
+## Proposed Level of Achievement: Gemini
 
 This application allows users to create a 3D maze/puzzle game in an augmented reality environment. It allows the gamer to roam and change the augmented reality world at will just like a sandbox. The app gives users the ability to create their own set of maze game obstacles, routes and characters in an augmented reality environment which can be uploaded to the database for other users to play.
+
+## Target Audience: Freshmen in Computing
 
 ## Problem Motivation
 
@@ -33,7 +36,22 @@ For objects with blue colour code (clues), users will be able to key in the clue
 ### Delete button
 Users will be able to scroll through the list of objects they made and have the option to delete them
 
+## Plan
+1st week of June: Object Builder (Cube, Cuboid... with the controller)
 
+2nd week of June: Converting 2D maze to 3D maze + testing and debugging
+
+3rd week of June: Background sourcing and designing + testing and debugging
+
+4th week of June: Obstacles/Clue designer + testing and debugging
+
+1st week of July: Design application front page
+
+2nd week of July: Testing and debugging of the whole application
+
+3rd week of July: Testing and debugging of the whole application
+
+4th week of July: Final Enhancement (if any)
 
 
 
