@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class BuildingSystem : MonoBehaviour
 
     private void Update()
     {
-        
+
         if (Input.GetKeyDown("e"))
         {
 
@@ -54,16 +55,19 @@ public class BuildingSystem : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown("r")) {
+        if (CrossPlatformInputManager.GetButtonDown("Change"))
+        {
+            Debug.Log("CLICKED CHANGED");
             blockSelectCounter++;
-            if (blockSelectCounter >= bSys.allBlocks.Count) {
+            if (blockSelectCounter >= bSys.allBlocks.Count)
+            {
                 blockSelectCounter = 0;
             }
         }
 
         if (buildModeOn)
-        {   
-    
+        {
+
             RaycastHit buildPosHit;
             if (Physics.Raycast(playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out buildPosHit, 50, buildableSurfacesLayer))
             {
@@ -97,8 +101,10 @@ public class BuildingSystem : MonoBehaviour
         {
             currentTemplateBlock.transform.position = buildPos;
 
-            if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) // Left mouse click
+            // if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) // Left mouse click
+            if (CrossPlatformInputManager.GetButtonDown("Place"))
             {
+                Debug.Log("CLICKED PLACED");
                 PlaceBlock();
             }
         }
