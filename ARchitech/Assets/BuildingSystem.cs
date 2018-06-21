@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class BuildingSystem : MonoBehaviour
@@ -22,6 +23,9 @@ public class BuildingSystem : MonoBehaviour
     private GameObject currentTemplateBlock; // variable to store current template block
 
     [SerializeField]
+    private GameObject modeToggleButton;
+
+    [SerializeField]
     private GameObject blockTemplatePrefab;
     [SerializeField]
     private GameObject blockPrefab;
@@ -40,36 +44,28 @@ public class BuildingSystem : MonoBehaviour
 
     private void Update()
     {
-
-        if (Input.GetKeyDown("e"))
+        // Toggle Build and Destroy Mode
+        if (CrossPlatformInputManager.GetButtonDown("ModeToggle"))
         {
-
-            // Remove Cursor when in build mode
-            if (buildModeOn)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
+            buildModeOn = !buildModeOn;
+            // Debug.Log(message: buildModeOn);
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("Change"))
-        {
-            Debug.Log("CLICKED CHANGED");
-            blockSelectCounter++;
-            if (blockSelectCounter >= bSys.allBlocks.Count)
-            {
-                blockSelectCounter = 0;
-            }
-        }
-
+        // Print Current Mode
         if (buildModeOn)
         {
+            modeToggleButton.GetComponentInChildren<Text>().text = "Build Mode";
+        }
+        else
+        {
+            modeToggleButton.GetComponentInChildren<Text>().text = "Destroy Mode";
+        }
 
+        // Ray Cast if build mode is true
+        if (buildModeOn)
+        {
             RaycastHit buildPosHit;
-            if (Physics.Raycast(playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out buildPosHit, 50, buildableSurfacesLayer))
+            if (Physics.Raycast(playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out buildPosHit, 100, buildableSurfacesLayer)) // Raycast on the buildable surfaces
             {
                 Vector3 point = buildPosHit.point;
                 buildPos = new Vector3(Mathf.Round(point.x), Mathf.Round(point.y) + 0.8f, Mathf.Round(point.z));
@@ -108,6 +104,12 @@ public class BuildingSystem : MonoBehaviour
                 PlaceBlock();
             }
         }
+
+        // Change Block when "Change Button is Clicked"
+        if (CrossPlatformInputManager.GetButtonDown("Change"))
+        {
+            changeBlock();
+        }
     }
 
     // Create
@@ -117,6 +119,15 @@ public class BuildingSystem : MonoBehaviour
         Block tempBlock = bSys.allBlocks[blockSelectCounter]; // Spawn new block from dictionary
         newBlock.name = tempBlock.blockName + "-Block";
         newBlock.GetComponent<MeshRenderer>().material = tempBlock.blockMaterial;
+    }
+
+    private void changeBlock()
+    {
+        blockSelectCounter++;
+        if (blockSelectCounter >= bSys.allBlocks.Count)
+        {
+            blockSelectCounter = 0;
+        }
     }
 }
 
