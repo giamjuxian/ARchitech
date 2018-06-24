@@ -11,19 +11,27 @@ public class BuildingSystem : MonoBehaviour
     private Camera playerCamera;
 
     private bool buildModeOn = false;
+    private bool destroyModeOn = false;
     private bool canBuild = false;
+    private bool canDestroy = false;
 
     private BlockSystem bSys;
 
     [SerializeField]
     private LayerMask buildableSurfacesLayer;
 
+    [SerializeField]
+    private LayerMask destroyableSurfacesLayer;
+
     private Vector3 buildPos;
+    private GameObject blockToDestroy;
 
     private GameObject currentTemplateBlock; // variable to store current template block
 
     [SerializeField]
     private GameObject modeToggleButton;
+    [SerializeField]
+    private GameObject placeButton;
 
     [SerializeField]
     private GameObject blockTemplatePrefab;
@@ -40,6 +48,7 @@ public class BuildingSystem : MonoBehaviour
         bSys = GetComponent<BlockSystem>();
         blockSelectCounter = 0;
         buildModeOn = true;
+        destroyModeOn = false;
     }
 
     private void Update()
@@ -48,19 +57,29 @@ public class BuildingSystem : MonoBehaviour
         if (CrossPlatformInputManager.GetButtonDown("ModeToggle"))
         {
             buildModeOn = !buildModeOn;
-            // Debug.Log(message: buildModeOn);
+            destroyModeOn = !destroyModeOn;
         }
 
         // Print Current Mode
-        if (buildModeOn)
+        if (buildModeOn && !destroyModeOn)
         {
             modeToggleButton.GetComponentInChildren<Text>().text = "Build Mode";
+            placeButton.GetComponentInChildren<Text>().text = "Place";
+            buildMode();
         }
-        else
+        else if (!buildModeOn && destroyModeOn)
         {
             modeToggleButton.GetComponentInChildren<Text>().text = "Destroy Mode";
+            placeButton.GetComponentInChildren<Text>().text = "Destroy";
+            destroyMode();
         }
 
+
+    }
+
+
+    private void buildMode()
+    {
         // Ray Cast if build mode is true
         if (buildModeOn)
         {
@@ -96,12 +115,9 @@ public class BuildingSystem : MonoBehaviour
         if (canBuild && currentTemplateBlock != null)
         {
             currentTemplateBlock.transform.position = buildPos;
-
-            // if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) // Left mouse click
             if (CrossPlatformInputManager.GetButtonDown("Place"))
             {
-                Debug.Log("CLICKED PLACED");
-                PlaceBlock();
+                placeBlock();
             }
         }
 
@@ -112,8 +128,17 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    // Create
-    private void PlaceBlock()
+    private void changeBlock()
+    {
+        blockSelectCounter++;
+        if (blockSelectCounter >= bSys.allBlocks.Count)
+        {
+            blockSelectCounter = 0;
+        }
+    }
+
+    // Create Block
+    private void placeBlock()
     {
         GameObject newBlock = Instantiate(blockPrefab, buildPos, Quaternion.identity); // Create new block object
         Block tempBlock = bSys.allBlocks[blockSelectCounter]; // Spawn new block from dictionary
@@ -121,12 +146,65 @@ public class BuildingSystem : MonoBehaviour
         newBlock.GetComponent<MeshRenderer>().material = tempBlock.blockMaterial;
     }
 
-    private void changeBlock()
+    private void destroyMode()
     {
-        blockSelectCounter++;
-        if (blockSelectCounter >= bSys.allBlocks.Count)
+        // ray cast if destroy mode is true
+        if (destroyModeOn)
         {
-            blockSelectCounter = 0;
+            RaycastHit buildPosHit;
+            if (Physics.Raycast(playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out buildPosHit, 100, destroyableSurfacesLayer)) // raycast on the buildable surfaces
+            {
+                Vector3 point = buildPosHit.point;
+                buildPos = new Vector3(Mathf.Round(point.x) , Mathf.Round(point.y) + 0.8f, Mathf.Round(point.z));
+                blockToDestroy = buildPosHit.transform.gameObject;
+                print("BLOCK " + blockToDestroy);
+                canDestroy = true;
+            }
+            else
+            {
+                Destroy(currentTemplateBlock.gameObject);
+                canDestroy = false;
+            }
+
+            Debug.Log(canDestroy);
+        }
+
+        //// destroy block when destroy mode is off and template is still present. make sure that the block cannot be build without build mode 
+        //if (!destroyModeOn && currentTemplateBlock != null)
+        //{
+        //    Destroy(currentTemplateBlock.gameObject);
+        //    canDestroy = false;
+        //}
+
+        //// create currenttemplateblock when canDestroy is on 
+        //if (canDestroy && currentTemplateBlock == null)
+        //{
+        //    currentTemplateBlock = Instantiate(blockTemplatePrefab, buildPos, Quaternion.identity); // creates template block
+        //    currentTemplateBlock.GetComponent<MeshRenderer>().material = templateMaterial; // create template block and update the material
+        //}
+
+        // building part of system
+        if (canDestroy)
+        {
+            //currentTemplateBlock.transform.position = buildPos;
+            if (CrossPlatformInputManager.GetButtonDown("Place"))
+            {   
+                destroyblock();
+            }
+        }
+    }
+
+    // destroy block
+    private void destroyblock()
+    {
+        if (blockToDestroy.name == "Ground")
+        {
+            Debug.Log(message: "ITS A GROUND NO DELETE");
+        }
+        else
+        {
+            Debug.Log(message: "ITS A HIT");
+            Destroy(blockToDestroy);
         }
     }
 }
