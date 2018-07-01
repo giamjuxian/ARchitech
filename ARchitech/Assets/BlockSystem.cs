@@ -18,7 +18,7 @@ public class BlockSystem : MonoBehaviour
             BlockType newBlockType = allBlockTypes[i];
             Block newBlock = new Block(i, newBlockType.blockName, newBlockType.blockMat);
             allBlocks[i] = newBlock;
-            Debug.Log("Block added to dictionary" + allBlocks[i].blockName);
+            Debug.Log("Block added to dictionary - " + allBlocks[i].blockName);
         }
     }
 
