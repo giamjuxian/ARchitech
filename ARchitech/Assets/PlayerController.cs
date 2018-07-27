@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private Camera ARCamera;
     float moveSpeed = 4f;
     Vector3 forward, right;
     public bool onGround;
     private Rigidbody rb;
+    private Animator anim;
 
     // Use this for initialization
     void Start()
     {
+        anim = gameObject.GetComponentInChildren<Animator>();
         onGround = true;
         rb = GetComponent<Rigidbody>();
-        forward = ARCamera.transform.forward;
+        forward = Camera.main.transform.forward;
         forward.y = 0;
         forward = Vector3.Normalize(forward);
         right = Quaternion.Euler(new Vector3(0, 90, 0)) * forward;
@@ -26,16 +27,25 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(onGround);
         if (onGround)
         {
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
             {
-                rb.velocity = new Vector3(0, 7f, 0);
+                rb.velocity = new Vector3(0, 5f, 0);
                 onGround = false;
             }
         }
         float x = CrossPlatformInputManager.GetAxis("Horizontal");
         float y = CrossPlatformInputManager.GetAxis("Vertical");
+        if (x != 0 || y != 0)
+        {
+            anim.SetInteger("AnimationPar", 1);
+        }
+        else
+        {
+            anim.SetInteger("AnimationPar", 0);
+        }
 
         Vector3 direction = new Vector3(x, 0, y);
         Vector3 rightMovement = right * moveSpeed * Time.deltaTime * x;

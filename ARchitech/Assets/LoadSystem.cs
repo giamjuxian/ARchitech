@@ -20,6 +20,8 @@ public class LoadSystem : MonoBehaviour {
     // GAME BUTTONS
     [SerializeField]
     private GameObject loadButton;
+    [SerializeField]
+    private GameObject spawnButton;
 
     // PREFABS
     [SerializeField]
@@ -27,6 +29,10 @@ public class LoadSystem : MonoBehaviour {
 
     // MATERIAL SELECTOR
     private int blockSelectCounter;
+
+    // AVATAR PREFAB
+    [SerializeField]
+    private GameObject avatarPrefab;
 
     // Use this for initialization
     void Start () {
@@ -37,6 +43,10 @@ public class LoadSystem : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (CrossPlatformInputManager.GetButtonDown("Spawn"))
+        {
+            spawnAvatar();
+        }
         if (CrossPlatformInputManager.GetButtonDown("Load"))
         {
             loadBlocks();
@@ -59,6 +69,11 @@ public class LoadSystem : MonoBehaviour {
         }
 
         placeLoadedBlocks();
+    }
+
+    private void spawnAvatar() {
+        Vector3 spawnPos = new Vector3(-11f, 5f, -11f);
+        GameObject avatar = Instantiate(avatarPrefab, spawnPos, Quaternion.identity) as GameObject;
     }
 
     private void placeLoadedBlocks()
