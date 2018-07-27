@@ -26,17 +26,6 @@ public class BuildingSystem : MonoBehaviour
     private BlockSystem bSys;
     private BlockData blockData;
 
-    // TEXTURE IMAGES
-    [SerializeField]
-    private ImageConversion dirtTexture;
-    [SerializeField]
-    private ImageConversion waterTexture;
-    [SerializeField]
-    private ImageConversion grassTexture;
-    [SerializeField]
-    private ImageConversion brickTexture;
-
-
     // GAME LAYERS
     [SerializeField]
     private LayerMask buildableSurfacesLayer;
