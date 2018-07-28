@@ -5,26 +5,23 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class createNew : MonoBehaviour {
 
     public GameObject mazeTitle;
+    [SerializeField]
+    private GameObject currentPanel;
 
-    public Button enter;
+    [SerializeField]
+    private GameObject failedPanel;
 
-    public GameObject currentPanel;
-    public GameObject nextPanel;
-    public GameObject failedPanel;
-
-
-    public void createMazeData()
+	public void createMazeData()
     {
 
         Debug.Log(username_static.username);
 
         string title;
-
-        Button toUpdate = enter.GetComponent<Button>();
         title = mazeTitle.GetComponent<InputField>().text;
         if (title != "")
         {
@@ -40,8 +37,7 @@ public class createNew : MonoBehaviour {
             bf.Serialize(file, userMazeData);
             file.Close();
 
-            currentPanel.SetActive(false);
-            nextPanel.SetActive(true);
+            SceneManager.LoadScene(1);
 
 
         }
@@ -66,12 +62,24 @@ class UserMazeData
     }
 
     public void createNewMazeData(string username, Maze mazeToBeAdded) {
-        Maze[] mazeArray = userMazeData[username];
-        for (int i = 0; i < mazeArray.Length; i++) {
-            if(mazeArray[i].mazeTitle == "") {
-                mazeArray[i] = mazeToBeAdded;
-            }    
+        if(userMazeData.ContainsKey(username)) {
+            Maze[] mazeArray = userMazeData[username];
+            for (int i = 0; i < mazeArray.Length; i++)
+            {
+                if (mazeArray[i].mazeTitle == "")
+                {
+                    mazeArray[i] = mazeToBeAdded;
+                }
+            }
+        } else {
+            Maze[] mazeArray = new Maze[10];
+            mazeArray[0] = mazeToBeAdded;
+
+            userMazeData.Add(username, mazeArray);
         }
+
+
+
     }
 
 
@@ -82,11 +90,12 @@ class Maze
 {
     public string mazeTitle;
     public CreatedBlock blocks;
-    public Vector3 buildPos;
+
+  
 
     public Maze(string title)
     {
-        this.blocks = new CreatedBlock(buildPos.x, buildPos.y, buildPos.z, 0);
+        this.blocks = new CreatedBlock(0, 0, 0, 0);
         this.mazeTitle = title;
 
     }

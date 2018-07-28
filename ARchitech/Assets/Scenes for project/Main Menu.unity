@@ -6337,9 +6337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mazeTitle: {fileID: 1920588694}
-  enter: {fileID: 0}
   currentPanel: {fileID: 0}
-  nextPanel: {fileID: 0}
   failedPanel: {fileID: 0}
 --- !u!1 &1397548869
 GameObject:
@@ -7597,10 +7595,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mazeTitle: {fileID: 1920588694}
-  enter: {fileID: 1392342153}
   currentPanel: {fileID: 1585379243}
-  nextPanel: {fileID: 0}
-  failedPanel: {fileID: 0}
+  failedPanel: {fileID: 1931440489}
 --- !u!114 &1585379249
 MonoBehaviour:
   m_ObjectHideFlags: 0
