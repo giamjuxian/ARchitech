@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    // ATTRIBUTES
     [SerializeField]
-    float moveSpeed = 4f;
+    private float moveSpeed = 4f;
+
     Vector3 forward, right;
     public bool onGround;
     private Rigidbody rb;
@@ -27,7 +30,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(onGround);
         if (onGround)
         {
             if (CrossPlatformInputManager.GetButtonDown("Jump"))
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         }
         float x = CrossPlatformInputManager.GetAxis("Horizontal");
         float y = CrossPlatformInputManager.GetAxis("Vertical");
+
         if (x != 0 || y != 0)
         {
             anim.SetInteger("AnimationPar", 1);
@@ -50,16 +53,14 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = new Vector3(x, 0, y);
         Vector3 rightMovement = right * moveSpeed * Time.deltaTime * x;
         Vector3 upMovement = forward * moveSpeed * Time.deltaTime * y;
-
         Vector3 heading = Vector3.Normalize(rightMovement + upMovement);
+        if (x != 0 || y != 0)
+        {
+            transform.forward = heading;
+        }
 
-        transform.forward = heading;
         transform.position += rightMovement;
         transform.position += upMovement;
-
-        //if (x != 0 && y != 0) {
-        //    transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Atan2(x, y) * Mathf.Rad2Deg, transform.eulerAngles.z);
-        //}
     }
 
     void OnCollisionEnter(Collision collision)
@@ -67,6 +68,17 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             onGround = true;
+        }
+        if (collision.gameObject.CompareTag("Complete"))
+        {
+            GameObject[] img = GameObject.FindGameObjectsWithTag("CompleteImg");
+            foreach (GameObject image in img)
+            {
+                Debug.Log("hello");
+                Debug.Log(image);
+                RawImage showImage = image.GetComponentInChildren<RawImage>();
+                showImage.enabled = true;
+            }
         }
     }
 }

@@ -56,7 +56,6 @@ public class LoadSystem : MonoBehaviour {
     // This method loads the previously saved blocks
     private void loadBlocks()
     {
-        Debug.Log("LOAD TRIGGED");
         if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -80,7 +79,6 @@ public class LoadSystem : MonoBehaviour {
     {
         foreach (var item in blockData.gameData)
         {
-            Debug.Log("LOADED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
             Vector3 blockBuildPos = new Vector3(item.Value.buildPosX, item.Value.buildPosY, item.Value.buildPosZ);
 
             GameObject newBlock = Instantiate(blockPrefab, blockBuildPos, Quaternion.identity) as GameObject; // Create new block object
