@@ -20,6 +20,8 @@ public class LoadSystem : MonoBehaviour {
     // GAME BUTTONS
     [SerializeField]
     private GameObject loadButton;
+    [SerializeField]
+    private GameObject spawnButton;
 
     // PREFABS
     [SerializeField]
@@ -27,6 +29,10 @@ public class LoadSystem : MonoBehaviour {
 
     // MATERIAL SELECTOR
     private int blockSelectCounter;
+
+    // AVATAR PREFAB
+    [SerializeField]
+    private GameObject avatarPrefab;
 
     // Use this for initialization
     void Start () {
@@ -37,6 +43,10 @@ public class LoadSystem : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (CrossPlatformInputManager.GetButtonDown("Spawn"))
+        {
+            spawnAvatar();
+        }
         if (CrossPlatformInputManager.GetButtonDown("Load"))
         {
             loadBlocks();
@@ -46,7 +56,6 @@ public class LoadSystem : MonoBehaviour {
     // This method loads the previously saved blocks
     private void loadBlocks()
     {
-        Debug.Log("LOAD TRIGGED");
         if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -61,11 +70,15 @@ public class LoadSystem : MonoBehaviour {
         placeLoadedBlocks();
     }
 
+    private void spawnAvatar() {
+        Vector3 spawnPos = new Vector3(-11f, 5f, -11f);
+        GameObject avatar = Instantiate(avatarPrefab, spawnPos, Quaternion.identity) as GameObject;
+    }
+
     private void placeLoadedBlocks()
     {
         foreach (var item in blockData.gameData)
         {
-            Debug.Log("LOADED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
             Vector3 blockBuildPos = new Vector3(item.Value.buildPosX, item.Value.buildPosY, item.Value.buildPosZ);
 
             GameObject newBlock = Instantiate(blockPrefab, blockBuildPos, Quaternion.identity) as GameObject; // Create new block object

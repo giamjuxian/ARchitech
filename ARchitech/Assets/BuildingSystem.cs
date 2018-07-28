@@ -41,6 +41,8 @@ public class BuildingSystem : MonoBehaviour
     private GameObject saveButton;
     [SerializeField]
     private GameObject loadButton;
+    [SerializeField]
+    private GameObject changeButton;
 
     // PREFABS
     [SerializeField]
@@ -170,7 +172,6 @@ public class BuildingSystem : MonoBehaviour
 
         // Adding to Dictionary
         CreatedBlock createdBlock = new CreatedBlock(buildPos.x, buildPos.y, buildPos.z, blockSelectCounter);
-        Debug.Log("ADDED - " + newBlock.GetInstanceID() + " | " + createdBlock.buildPosX + "," + createdBlock.buildPosY + "," + createdBlock.buildPosZ + " | " + createdBlock.blockSelectCounter);
         blockData.gameData.Add(newBlock.GetInstanceID(), createdBlock);
     }
 
@@ -223,13 +224,8 @@ public class BuildingSystem : MonoBehaviour
     // This method destroys the targeted block
     private void destroyblock()
     {
-        if (blockToDestroy.name == "Ground")
+        if (blockToDestroy.name != "Ground")
         {
-            Debug.Log(message: "ITS A GROUND NO DELETE");
-        }
-        else
-        {
-            Debug.Log("REMOVED " + blockToDestroy.GetInstanceID());
             blockData.gameData.Remove(blockToDestroy.GetInstanceID());
             Destroy(blockToDestroy);
         }
@@ -243,10 +239,10 @@ public class BuildingSystem : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
         PlayerData playerData = new PlayerData();
         playerData.createdBlockData = blockData.gameData;
-        foreach (var item in playerData.createdBlockData)
-        {
-            Debug.Log("SAVED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
-        }
+        //foreach (var item in playerData.createdBlockData)
+        //{
+        //    Debug.Log("SAVED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
+        //}
         bf.Serialize(file, playerData);
         file.Close();
     }
@@ -271,7 +267,7 @@ public class BuildingSystem : MonoBehaviour
     private void placeLoadedBlocks()
     {
         foreach (var item in blockData.gameData) {
-            Debug.Log("LOADED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
+            //Debug.Log("LOADED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
             Vector3 blockBuildPos = new Vector3(item.Value.buildPosX, item.Value.buildPosY, item.Value.buildPosZ);
 
             GameObject newBlock = Instantiate(blockPrefab, blockBuildPos, Quaternion.identity) as GameObject; // Create new block object
