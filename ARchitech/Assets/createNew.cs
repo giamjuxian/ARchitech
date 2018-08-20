@@ -7,39 +7,43 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
 
-public class createNew : MonoBehaviour {
-
+public class createNew : MonoBehaviour
+{
     public GameObject mazeTitle;
-    [SerializeField]
-    private GameObject currentPanel;
+    public GameObject currentPanel;
+    public GameObject failedPanel;
 
-    [SerializeField]
-    private GameObject failedPanel;
-
-	public void createMazeData()
+    public void createMazeData()
     {
-
-        Debug.Log(username_static.username);
-
         string title;
         title = mazeTitle.GetComponent<InputField>().text;
         if (title != "")
         {
-            Maze mazeCreated = new Maze(title);
+            if (File.Exists(Application.persistentDataPath + "/userMazeData.data"))
+            {
+                Debug.Log("== SAVE FILE EXISTS ==");
 
-            UserMazeData userMazeData = new UserMazeData();
-            userMazeData.createNewMazeData(username_static.username, mazeCreated);
-
-            Debug.Log("SAVE TRIGGED TO " + Application.persistentDataPath);
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(Application.persistentDataPath + "/userMazeData.data");
-
-            bf.Serialize(file, userMazeData);
-            file.Close();
-
-            SceneManager.LoadScene(1);
-
-
+                // Load the information of userMazeData from file
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
+                Debug.Log(Application.persistentDataPath);
+                UserMazeData userMazeData = (UserMazeData)bf.Deserialize(file);
+                file.Close();
+                userMazeData.createNewMazeData(username_static.username, title);
+                // Save the information back into the loaded file
+                saveFile(userMazeData);
+                username_static.mazeTitle = title;
+                SceneManager.LoadScene(1);
+            }
+            else
+            {
+                Debug.Log("== SAVE FILE DOESN'T EXIST, CREATING NEW SAVE FILE ==");
+                UserMazeData userMazeData = new UserMazeData();
+                userMazeData.createNewMazeData(username_static.username, title);
+                saveFile(userMazeData);
+                username_static.mazeTitle = title;
+                SceneManager.LoadScene(1);
+            }
         }
         else
         {
@@ -48,59 +52,87 @@ public class createNew : MonoBehaviour {
         }
 
     }
+
+    // This method creates a new file or updates and overwrite the current saved file 
+    private void saveFile(UserMazeData userMazeData)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/userMazeData.data");
+        bf.Serialize(file, userMazeData);
+        file.Close();
+    }
 }
+
+
 
 [Serializable]
 class UserMazeData
 {
+    // Variables
+    private Dictionary<string, MazeCollection> userMazeData;
 
-    public Dictionary<string, Maze[]> userMazeData;
-
+    // Constructor
     public UserMazeData()
     {
-        this.userMazeData = new Dictionary<string, Maze[]>();
+        this.userMazeData = new Dictionary<string, MazeCollection>();
     }
 
-    public void createNewMazeData(string username, Maze mazeToBeAdded) {
-        if(userMazeData.ContainsKey(username)) {
-            Maze[] mazeArray = userMazeData[username];
-            for (int i = 0; i < mazeArray.Length; i++)
-            {
-                if (mazeArray[i].mazeTitle == "")
-                {
-                    mazeArray[i] = mazeToBeAdded;
-                }
-            }
-        } else {
-            Maze[] mazeArray = new Maze[10];
-            mazeArray[0] = mazeToBeAdded;
-
-            userMazeData.Add(username, mazeArray);
+    // This method creates a new maze data with maze title
+    public void createNewMazeData(string username, string mazeTitle)
+    {
+        if (userMazeData.ContainsKey(username))
+        {
+            MazeCollection collection = userMazeData[username]; // Retrieve collection based on username
+            collection.addNewMaze(mazeTitle); // Add new Maze into collection
         }
-
-
-
+        else
+        {
+            MazeCollection collection = new MazeCollection();
+            collection.addNewMaze(mazeTitle); // Add new Maze into collection
+            userMazeData.Add(username, collection); // Add username with mazeCollection into the Dictionary
+        }
     }
 
+    // This method returns the maze using the username as key
+    public MazeCollection getMazeByUsername(string mazeTitle)
+    {
+        return userMazeData[mazeTitle];
+    }
 
+    // This method saves the new maze collection by username
+    public void saveMazeCollectionByUsername(MazeCollection newCollection, string username) {
+        userMazeData[username] = newCollection;
+    }
 }
 
 [Serializable]
-class Maze
+class MazeCollection
 {
-    public string mazeTitle;
-    public CreatedBlock blocks;
+    // Variables
+    private Dictionary<string, MazeData> collection;
 
-  
-
-    public Maze(string title)
+    // Constructor
+    public MazeCollection()
     {
-        this.blocks = new CreatedBlock(0, 0, 0, 0);
-        this.mazeTitle = title;
-
+        collection = new Dictionary<string, MazeData>();
     }
 
+    // This method adds a new maze into the collection with an empty maze data
+    public void addNewMaze(string mazeTitle)
+    {
+        MazeData mazeData = new MazeData();
+        collection.Add(mazeTitle, mazeData);
+    }
 
+    // This method retrieves the maze data by title of the maze
+    public MazeData getMazeDataByTitle(string mazeTitle)
+    {
+        return collection[mazeTitle];
+    }
 
-
+    // This method saves the maze data by title of the maze
+    public void saveMazeDataByTitle(MazeData mazeData, string mazeTitle)
+    {
+        collection[mazeTitle] = mazeData;
+    }
 }

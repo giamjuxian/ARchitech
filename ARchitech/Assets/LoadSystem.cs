@@ -60,11 +60,11 @@ public class LoadSystem : MonoBehaviour {
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-            PlayerData playerData = (PlayerData)bf.Deserialize(file);
+            MazeData mazeData = (MazeData)bf.Deserialize(file);
             file.Close();
 
             blockData.gameData.Clear();
-            blockData.gameData = playerData.createdBlockData;
+            blockData.gameData = mazeData.createdBlockData;
         }
 
         placeLoadedBlocks();

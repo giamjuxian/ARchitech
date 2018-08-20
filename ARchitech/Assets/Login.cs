@@ -24,50 +24,35 @@ public class Login : MonoBehaviour
 
     public void ToggleOnClick()
     {
-
         Button toUpdate = enter.GetComponent<Button>();
-
         Username = username.GetComponent<InputField>().text;
-
-
-
         Password = password.GetComponent<InputField>().text;
 
-
-        Debug.Log("LOAD TRIGGED");
+        Debug.Log("== LOAD TRIGGED ==");
         if (File.Exists(Application.persistentDataPath + "/userInfo.data"))
         {
-            Debug.Log("FILE EXISTS");
+            Debug.Log("== FILE EXISTS ==");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/userInfo.data", FileMode.Open);
-            Debug.Log("FILE READ");
+            Debug.Log("== FILE READ ==");
             UserInfo userInfo = (UserInfo)bf.Deserialize(file);
             file.Close();
 
-
-
             if (userInfo.userData.ContainsKey(Username) && userInfo.userData[Username] == Password)
             {
-                Debug.Log("YEY");
+                Debug.Log("== USER FOUND ==");
                 currentPanel.SetActive(false);
                 nextPanel.SetActive(true);
                 username_static.username = Username;
-                Debug.Log(username_static.username);
-
             }
             else if(!userInfo.userData.ContainsKey(Username) || userInfo.userData[Username] != Password)
             {
-                Debug.Log("YEY1");
+                Debug.Log("== INCORRECT PASSWORD ==");
                 currentPanel.SetActive(false);
                 failedPanel.SetActive(true);
             }
-
-
-
-
         }
     }
-
 }
 
 

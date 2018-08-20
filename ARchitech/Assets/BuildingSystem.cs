@@ -57,6 +57,10 @@ public class BuildingSystem : MonoBehaviour
     // MATERIAL SELECTOR
     private int blockSelectCounter;
 
+    // SAVE LOAD VARIABLES
+    private string username;
+    private string mazeTitle;
+
     private void Start()
     {
         bSys = GetComponent<BlockSystem>();
@@ -64,6 +68,10 @@ public class BuildingSystem : MonoBehaviour
         blockSelectCounter = 0;
         buildModeOn = true;
         destroyModeOn = false;
+        username = username_static.username;
+        mazeTitle = username_static.mazeTitle;
+        //Debug.Log("Username = " + username);
+        //Debug.Log("MazeTitle = " + mazeTitle);
     }
 
     private void Update()
@@ -94,10 +102,10 @@ public class BuildingSystem : MonoBehaviour
             saveBlocks();
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("Load"))
-        {
-            loadBlocks();
-        }
+        //if (CrossPlatformInputManager.GetButtonDown("Load"))
+        //{
+        //    loadBlocks();
+        //}
     }
 
     // This method enables the build mode for users to build the blocks 
@@ -235,55 +243,74 @@ public class BuildingSystem : MonoBehaviour
     private void saveBlocks()
     {
         Debug.Log("SAVE TRIGGED TO " + Application.persistentDataPath);
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
-        PlayerData playerData = new PlayerData();
-        playerData.createdBlockData = blockData.gameData;
-        //foreach (var item in playerData.createdBlockData)
-        //{
-        //    Debug.Log("SAVED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
-        //}
-        bf.Serialize(file, playerData);
-        file.Close();
+        if (File.Exists(Application.persistentDataPath + "/userMazeData.data"))
+        {
+            // Load the save file for details
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
+            UserMazeData userMazeData = (UserMazeData)bf.Deserialize(file);
+            MazeCollection mazeCollection = userMazeData.getMazeByUsername(username);
+            file.Close();
+
+            // Change the new data to be saved
+            MazeData mazeData = new MazeData();
+            mazeData.createdBlockData = blockData.gameData;
+            mazeCollection.saveMazeDataByTitle(mazeData, mazeTitle);
+            userMazeData.saveMazeCollectionByUsername(mazeCollection, username);
+
+            // Save the data into the file
+            saveFile(userMazeData);
+        }
     }
 
     // This method loads the previously saved blocks
     private void loadBlocks()
     {
         Debug.Log("LOAD TRIGGED");
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.dat")) {
+        if (File.Exists(Application.persistentDataPath + "/userMazeData.data"))
+        {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-            PlayerData playerData = (PlayerData)bf.Deserialize(file);
+            FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
+            UserMazeData userMazeData = (UserMazeData) bf.Deserialize(file);
             file.Close();
-
-            blockData.gameData.Clear();
-            blockData.gameData = playerData.createdBlockData;
+            blockData.gameData.Clear(); // Clear the current blocks
+            MazeCollection mazeCollection = userMazeData.getMazeByUsername(username);
+            MazeData mazeData = mazeCollection.getMazeDataByTitle(mazeTitle);
+            blockData.gameData = mazeData.createdBlockData;
         }
-
         placeLoadedBlocks();
     }
 
+    // This method iterates through the data of the blocks and instantiate it into the plane
     private void placeLoadedBlocks()
     {
-        foreach (var item in blockData.gameData) {
+        foreach (var item in blockData.gameData)
+        {
             //Debug.Log("LOADED - " + item.Key + " | " + item.Value.buildPosX + "," + item.Value.buildPosY + "," + item.Value.buildPosZ + " | " + item.Value.blockSelectCounter);
             Vector3 blockBuildPos = new Vector3(item.Value.buildPosX, item.Value.buildPosY, item.Value.buildPosZ);
-
             GameObject newBlock = Instantiate(blockPrefab, blockBuildPos, Quaternion.identity) as GameObject; // Create new block object
             Block tempBlock = bSys.allBlocks[item.Value.blockSelectCounter]; // Spawn new block from dictionary
             newBlock.name = tempBlock.blockName + "-Block";
             newBlock.GetComponent<MeshRenderer>().material = tempBlock.blockMaterial;
         }
     }
+
+    // This method creates a new file or updates and overwrite the current saved file 
+    private void saveFile(UserMazeData userMazeData)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/userMazeData.data");
+        bf.Serialize(file, userMazeData);
+        file.Close();
+    }
 }
 
 [Serializable]
-class PlayerData
+class MazeData
 {
     public Dictionary<int, CreatedBlock> createdBlockData;
 
-    public PlayerData()
+    public MazeData()
     {
         createdBlockData = new Dictionary<int, CreatedBlock>();
     }
