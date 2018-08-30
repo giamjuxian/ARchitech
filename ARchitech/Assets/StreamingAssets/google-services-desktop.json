@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "741369014357",
+    "firebase_url": "https://architech-f2f76.firebaseio.com",
+    "project_id": "architech-f2f76",
+    "storage_bucket": "architech-f2f76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741369014357:android:145e9892ad2d510c",
+        "android_client_info": {
+          "package_name": "com.android.ARchitech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741369014357-g55k14c5o1gmsikoqkonh41rcjagsc13.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUgzZYrZcok4GqG9PiiL4JEAMy4kkYiFQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class username_static : MonoBehaviour
 {
-    public static string username;
+    public static string email;
     public static string mazeTitle;
 }
 

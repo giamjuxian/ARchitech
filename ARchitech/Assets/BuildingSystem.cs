@@ -68,7 +68,7 @@ public class BuildingSystem : MonoBehaviour
         blockSelectCounter = 0;
         buildModeOn = true;
         destroyModeOn = false;
-        username = username_static.username;
+        username = username_static.email;
         mazeTitle = username_static.mazeTitle;
         //Debug.Log("Username = " + username);
         //Debug.Log("MazeTitle = " + mazeTitle);

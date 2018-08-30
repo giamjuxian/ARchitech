@@ -9,7 +9,6 @@ using System.IO;
 
 public class Register : MonoBehaviour
 {
-    public GameObject username;
     public GameObject email;
     public GameObject password;
     public GameObject confirmPassword;
@@ -22,7 +21,7 @@ public class Register : MonoBehaviour
     private string Password;
     private string ConfirmPassword;
     private string form;
-    private bool EmailValid = false;
+    private bool Valid = false;
 
 
     //Update is called once per frame
@@ -31,15 +30,17 @@ public class Register : MonoBehaviour
         Button toUpdate = enter.GetComponent<Button>();
         if (password.GetComponent<InputField>().text != "" &&
             email.GetComponent<InputField>().text != "" &&
-            username.GetComponent<InputField>().text != ""
-            && confirmPassword.GetComponent<InputField>().text != "")
+            confirmPassword.GetComponent<InputField>().text != "")
         {
-            EmailValid = true;
+            Valid = true;
         }
 
-        if (EmailValid == true)
+        if (password.GetComponent<InputField>().text != confirmPassword.GetComponent<InputField>().text) {
+            Valid = false;
+        }
+
+        if (Valid == true)
         {
-            Username = username.GetComponent<InputField>().text;
             Email = email.GetComponent<InputField>().text;
             Password = password.GetComponent<InputField>().text;
             ConfirmPassword = confirmPassword.GetComponent<InputField>().text;
@@ -47,13 +48,12 @@ public class Register : MonoBehaviour
             nextPanel.SetActive(true);
 
             UserInfo userInfo = new UserInfo();
-            userInfo.newUserInfo(Username, Password);
+            userInfo.newUserInfo(Email, Password);
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Create(Application.persistentDataPath + "/userInfo.data");
 
             bf.Serialize(file, userInfo);
             file.Close();
-
         }
         else
         {
@@ -62,7 +62,7 @@ public class Register : MonoBehaviour
         }
     }
 
-
+        
 
 }
 

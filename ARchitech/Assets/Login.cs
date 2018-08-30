@@ -8,7 +8,6 @@ using System.IO;
 public class Login : MonoBehaviour
 {
     [SerializeField]
-    public GameObject username;
     public GameObject email;
     public GameObject password;
     public GameObject currentPanel;
@@ -25,7 +24,7 @@ public class Login : MonoBehaviour
     public void ToggleOnClick()
     {
         Button toUpdate = enter.GetComponent<Button>();
-        Username = username.GetComponent<InputField>().text;
+        Email = email.GetComponent<InputField>().text;
         Password = password.GetComponent<InputField>().text;
 
         Debug.Log("== LOAD TRIGGED ==");
@@ -38,14 +37,14 @@ public class Login : MonoBehaviour
             UserInfo userInfo = (UserInfo)bf.Deserialize(file);
             file.Close();
 
-            if (userInfo.userData.ContainsKey(Username) && userInfo.userData[Username] == Password)
+            if (userInfo.userData.ContainsKey(Email) && userInfo.userData[Email] == Password)
             {
                 Debug.Log("== USER FOUND ==");
                 currentPanel.SetActive(false);
                 nextPanel.SetActive(true);
-                username_static.username = Username;
+                username_static.email = Username;
             }
-            else if(!userInfo.userData.ContainsKey(Username) || userInfo.userData[Username] != Password)
+            else if(!userInfo.userData.ContainsKey(Email) || userInfo.userData[Email] != Password)
             {
                 Debug.Log("== INCORRECT PASSWORD ==");
                 currentPanel.SetActive(false);

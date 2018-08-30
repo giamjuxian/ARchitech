@@ -29,7 +29,7 @@ public class createNew : MonoBehaviour
                 Debug.Log(Application.persistentDataPath);
                 UserMazeData userMazeData = (UserMazeData)bf.Deserialize(file);
                 file.Close();
-                userMazeData.createNewMazeData(username_static.username, title);
+                userMazeData.createNewMazeData(username_static.email, title);
                 // Save the information back into the loaded file
                 saveFile(userMazeData);
                 username_static.mazeTitle = title;
@@ -39,7 +39,7 @@ public class createNew : MonoBehaviour
             {
                 Debug.Log("== SAVE FILE DOESN'T EXIST, CREATING NEW SAVE FILE ==");
                 UserMazeData userMazeData = new UserMazeData();
-                userMazeData.createNewMazeData(username_static.username, title);
+                userMazeData.createNewMazeData(username_static.email, title);
                 saveFile(userMazeData);
                 username_static.mazeTitle = title;
                 SceneManager.LoadScene(1);
