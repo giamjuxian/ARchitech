@@ -5,28 +5,26 @@ using System;
 
 public class BlockData : MonoBehaviour
 {
-    public Dictionary<int, CreatedBlock> gameData;
+    public int id;
+    public List<CreatedBlock> gameData;
     // Use this for initialization
     void Start()
     {
-        gameData = new Dictionary<int, CreatedBlock>();
+        gameData = new List<CreatedBlock>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
 
 [Serializable]
 public class CreatedBlock {
+    public int blockId;
     public float buildPosX;
     public float buildPosY;
     public float buildPosZ;
     public int blockSelectCounter;
 
-    public CreatedBlock(float posX, float posY, float posZ, int counter) {
+    public CreatedBlock(int id, float posX, float posY, float posZ, int counter) {
+        this.blockId = id;
         this.buildPosX = posX;
         this.buildPosY = posY;
         this.buildPosZ = posZ;

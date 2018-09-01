@@ -79,10 +79,10 @@ public class LoadSystem : MonoBehaviour {
     {
         foreach (var item in blockData.gameData)
         {
-            Vector3 blockBuildPos = new Vector3(item.Value.buildPosX, item.Value.buildPosY, item.Value.buildPosZ);
+            Vector3 blockBuildPos = new Vector3(item.buildPosX, item.buildPosY, item.buildPosZ);
 
             GameObject newBlock = Instantiate(blockPrefab, blockBuildPos, Quaternion.identity) as GameObject; // Create new block object
-            Block tempBlock = bSys.allBlocks[item.Value.blockSelectCounter]; // Spawn new block from dictionary
+            Block tempBlock = bSys.allBlocks[item.blockSelectCounter]; // Spawn new block from dictionary
             newBlock.name = tempBlock.blockName + "-Block";
             newBlock.GetComponent<MeshRenderer>().material = tempBlock.blockMaterial;
         }

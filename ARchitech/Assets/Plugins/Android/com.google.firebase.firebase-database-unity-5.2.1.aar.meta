@@ -1,8 +1,7 @@
 fileFormatVersion: 2
-guid: 93324a471a6d44bb8297d17d8b191e52
+guid: 79c6a5122efa3cf40a5a0004a50d854f
 labels:
-- gvh
-- gvh_dotnet-3.5
+- gpsr
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -12,22 +11,21 @@ PluginImporter:
   isOverridable: 0
   platformData:
   - first:
-      Any: 
+      Android: Android
     second:
       enabled: 1
       settings: {}
   - first:
-      Editor: Editor
+      Any: 
     second:
-      enabled: 1
-      settings:
-        DefaultValueInitialized: true
+      enabled: 0
+      settings: {}
   - first:
-      Windows Store Apps: WindowsStoreApps
+      Editor: Editor
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        DefaultValueInitialized: true
   userData: 
   assetBundleName: 
   assetBundleVariant: 
