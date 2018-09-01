@@ -306,7 +306,7 @@ public class BuildingSystem : MonoBehaviour
 }
 
 [Serializable]
-class MazeData
+public class MazeData
 {
     public Dictionary<int, CreatedBlock> createdBlockData;
 
@@ -314,5 +314,7 @@ class MazeData
     {
         createdBlockData = new Dictionary<int, CreatedBlock>();
     }
+
+
 }
 

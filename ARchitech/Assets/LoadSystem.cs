@@ -87,4 +87,9 @@ public class LoadSystem : MonoBehaviour {
             newBlock.GetComponent<MeshRenderer>().material = tempBlock.blockMaterial;
         }
     }
+
+    internal static void LoadBlocks()
+    {
+        throw new NotImplementedException();
+    }
 }
