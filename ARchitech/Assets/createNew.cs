@@ -21,28 +21,29 @@ public class createNew : MonoBehaviour
         {
             //if (File.Exists(Application.persistentDataPath + "/userMazeData.data"))
             //{
-                //Debug.Log("== SAVE FILE EXISTS ==");
+            //Debug.Log("== SAVE FILE EXISTS ==");
 
-                //// Load the information of userMazeData from file
-                //BinaryFormatter bf = new BinaryFormatter();
-                //FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
-                //Debug.Log(Application.persistentDataPath);
-                //UserMazeData userMazeData = (UserMazeData)bf.Deserialize(file);
-                //file.Close();
-                //userMazeData.createNewMazeData(username_static.email, title);
-                //// Save the information back into the loaded file
-                //saveFile(userMazeData);
-                username_static.mazeTitle = title;
-                SceneManager.LoadScene(1);
+            //// Load the information of userMazeData from file
+            //BinaryFormatter bf = new BinaryFormatter();
+            //FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
+            //Debug.Log(Application.persistentDataPath);
+            //UserMazeData userMazeData = (UserMazeData)bf.Deserialize(file);
+            //file.Close();
+            //userMazeData.createNewMazeData(username_static.email, title);
+            //// Save the information back into the loaded file
+            //saveFile(userMazeData);
+            username_static.mazeTitle = title;
+            username_static.newMaze = true;
+            SceneManager.LoadScene(1);
             //}
             //else
             //{
-                //Debug.Log("== SAVE FILE DOESN'T EXIST, CREATING NEW SAVE FILE ==");
-                //UserMazeData userMazeData = new UserMazeData();
-                //userMazeData.createNewMazeData(username_static.email, title);
-                //saveFile(userMazeData);
-                //username_static.mazeTitle = title;
-                //SceneManager.LoadScene(1);
+            //Debug.Log("== SAVE FILE DOESN'T EXIST, CREATING NEW SAVE FILE ==");
+            //UserMazeData userMazeData = new UserMazeData();
+            //userMazeData.createNewMazeData(username_static.email, title);
+            //saveFile(userMazeData);
+            //username_static.mazeTitle = title;
+            //SceneManager.LoadScene(1);
             //}
         }
         else
@@ -53,12 +54,4 @@ public class createNew : MonoBehaviour
 
     }
 
-    // This method creates a new file or updates and overwrite the current saved file 
-    private void saveFile(UserMazeData userMazeData)
-    {
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/userMazeData.data");
-        bf.Serialize(file, userMazeData);
-        file.Close();
-    }
 }

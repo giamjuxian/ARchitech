@@ -63,6 +63,7 @@ public class FirebaseLogin : MonoBehaviour
             nextPanel.SetActive(true);
             username_static.email = email;
             username_static.userId = newUser.UserId;
+            username_static.isLoggedIn = true;
             Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
         });
     }

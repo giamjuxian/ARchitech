@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonComponent: {fileID: 114536789700259798}
-  buttonLabel: {fileID: 0}
+  buttonLabel: {fileID: 114090165058467644}
 --- !u!114 &114460314244882254
 MonoBehaviour:
   m_ObjectHideFlags: 1

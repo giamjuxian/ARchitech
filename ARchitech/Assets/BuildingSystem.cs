@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -79,6 +80,11 @@ public class BuildingSystem : MonoBehaviour
         mazeTitle = username_static.mazeTitle;
         userId = username_static.userId;
         database = GetComponent<DatabaseScript>();
+        if (!username_static.newMaze)
+        {
+            loadBlocks();
+        }
+
     }
     #endregion
 
@@ -90,6 +96,11 @@ public class BuildingSystem : MonoBehaviour
         {
             buildModeOn = !buildModeOn;
             destroyModeOn = !destroyModeOn;
+        }
+
+        if (CrossPlatformInputManager.GetButtonDown("Back"))
+        {
+            SceneManager.LoadScene(0);
         }
 
         // Print Current Mode
@@ -287,16 +298,14 @@ public class BuildingSystem : MonoBehaviour
     private void loadBlocks()
     {
         Debug.Log("LOAD TRIGGED");
-        if (File.Exists(Application.persistentDataPath + "/userMazeData.data"))
+        if (File.Exists(Application.persistentDataPath + "/mazeData.data"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/userMazeData.data", FileMode.Open);
-            UserMazeData userMazeData = (UserMazeData) bf.Deserialize(file);
+            FileStream file = File.Open(Application.persistentDataPath + "/mazeData.data", FileMode.Open);
+            MazeData userMazeData = (MazeData)bf.Deserialize(file);
             file.Close();
             blockData.gameData.Clear(); // Clear the current blocks
-            MazeCollection mazeCollection = userMazeData.getMazeByUsername(email);
-            MazeData mazeData = mazeCollection.getMazeDataByTitle(mazeTitle);
-            blockData.gameData = mazeData.createdBlockData;
+            blockData.gameData = userMazeData.createdBlockData;
         }
         placeLoadedBlocks();
     }

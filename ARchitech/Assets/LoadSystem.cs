@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
@@ -39,6 +40,7 @@ public class LoadSystem : MonoBehaviour {
         bSys = GetComponent<BlockSystem>();
         blockData = GetComponent<BlockData>();
         blockSelectCounter = 0;
+        loadBlocks();
     }
 	
 	// Update is called once per frame
@@ -47,26 +49,26 @@ public class LoadSystem : MonoBehaviour {
         {
             spawnAvatar();
         }
-        if (CrossPlatformInputManager.GetButtonDown("Load"))
+
+        if (CrossPlatformInputManager.GetButtonDown("Back"))
         {
-            loadBlocks();
+            SceneManager.LoadScene(0);
         }
     }
 
     // This method loads the previously saved blocks
     private void loadBlocks()
     {
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.dat"))
+        Debug.Log("LOAD TRIGGED TO " + Application.persistentDataPath);
+        if (File.Exists(Application.persistentDataPath + "/mazeData.data"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
-            MazeData mazeData = (MazeData)bf.Deserialize(file);
+            FileStream file = File.Open(Application.persistentDataPath + "/mazeData.data", FileMode.Open);
+            MazeData userMazeData = (MazeData)bf.Deserialize(file);
             file.Close();
-
-            blockData.gameData.Clear();
-            blockData.gameData = mazeData.createdBlockData;
+            blockData.gameData.Clear(); // Clear the current blocks
+            blockData.gameData = userMazeData.createdBlockData;
         }
-
         placeLoadedBlocks();
     }
 
